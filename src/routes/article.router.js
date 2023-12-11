@@ -13,7 +13,7 @@ articleRouter
   .get('/', getArticles)
   .get('/:id', getArticleById)
   .post('/', createArticle)
-  .put('/:id', updateArticleById)
+  .put('/:articleId', updateArticleById)
   .delete('/:id', deleteArticleById);
 
 export default articleRouter;
