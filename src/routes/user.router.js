@@ -11,9 +11,9 @@ const userRouter = Router();
 
 userRouter
   .get('/', getUsers)
-  .get('/:id', getUserByIdWithArticles)
+  .get('/:userId', getUserByIdWithArticles)
   .post('/', createUser)
   .put('/:userId', updateUserById)
-  .delete('/:id', deleteUserById);
+  .delete('/:userId', deleteUserById);
 
 export default userRouter;

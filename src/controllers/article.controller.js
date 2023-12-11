@@ -25,6 +25,16 @@ export const getArticles = async (req, res, next) => {
 
 export const getArticleById = async (req, res, next) => {
   try {
+    const articleId = req.params.articleId;
+    const article = await Article.findById(articleId).populate({
+      path: 'owner',
+      select: 'fullName email age'
+    });
+
+    if (!article) {
+      return res.status(404).json({ message: `Article with id ${articleId} not found` });
+    }
+    res.json(article);
 
   } catch (err) {
     next(err);
@@ -37,9 +47,8 @@ export const createArticle = async (req, res, next) => {
     if (!owner) {
       return res.status(400).json({message: `Owner(user) with id ${req.body.owner} not found`});
     }
-
     const article = await Article.create(req.body);
-
+    owner.articles.push(article._id);
     owner.numberOfArticles++;
     await owner.save();
 

@@ -11,7 +11,7 @@ const articleRouter = Router();
 
 articleRouter
   .get('/', getArticles)
-  .get('/:id', getArticleById)
+  .get('/:articleId', getArticleById)
   .post('/', createArticle)
   .put('/:articleId', updateArticleById)
   .delete('/:articleId', deleteArticleById);

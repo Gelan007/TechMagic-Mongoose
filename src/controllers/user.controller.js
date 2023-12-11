@@ -1,4 +1,5 @@
 import User from '../models/user.model.js';
+import Article from "../models/article.model.js";
 
 export const getUsers = async (req, res, next) => {
   try {
@@ -16,7 +17,18 @@ export const getUsers = async (req, res, next) => {
 
 export const getUserByIdWithArticles = async (req, res, next) => {
   try {
+    const userId = req.params.userId
+    const user = await User.find({_id: userId})
+        .populate({
+          path: 'articles',
+          select: 'title subtitle createdAt'
+        });
 
+    if(!user) {
+      return res.status(404).json({message: `User with id ${userId} not found`})
+    }
+
+    res.json(user);
   } catch (err) {
     next(err);
   }
@@ -51,7 +63,14 @@ export const updateUserById = async (req, res, next) => {
 
 export const deleteUserById = async (req, res, next) => {
   try {
+    const user = await User.findByIdAndRemove(req.params.userId);
+    if (!user) {
+      return res.status(404).json({message: `User with id ${req.params.userId} not found`});
+    }
 
+    await Article.deleteMany({ owner: req.params.userId });
+
+    res.json({message: "Success"});
   } catch (err) {
     next(err);
   }
