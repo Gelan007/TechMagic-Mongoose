@@ -64,10 +64,11 @@ userSchema.pre('updateOne', function (next) {
     this.set({ updatedAt: new Date() });
     next();
 });
-userSchema.pre("updateOne", function (next) {
+userSchema.pre("findOneAndUpdate", function (next) {
     this.set({ fullName: this.get("firstName") + " " + this.get("lastName")  });
     next();
 });
+
 
 
 const User = mongoose.model('User', userSchema);

@@ -34,7 +34,15 @@ export const createUser = async (req, res, next) => {
 
 export const updateUserById = async (req, res, next) => {
   try {
-    
+    const user = await User.findOneAndUpdate(
+        {_id: req.params.userId},
+        {$set: {firstName: req.body.firstName, lastName: req.body.lastName, age: req.body.age}},
+        {new: true, runValidators: true }
+    )
+    if (!user) {
+      return res.status(404).end();
+    }
+    res.json(user)
 
   } catch (err) {
     next(err);

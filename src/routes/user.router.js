@@ -13,7 +13,7 @@ userRouter
   .get('/', getUsers)
   .get('/:id', getUserByIdWithArticles)
   .post('/', createUser)
-  .put('/:id', updateUserById)
+  .put('/:userId', updateUserById)
   .delete('/:id', deleteUserById);
 
 export default userRouter;
