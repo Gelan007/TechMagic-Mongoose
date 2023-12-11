@@ -3,6 +3,16 @@ import User from "../models/user.model.js";
 
 export const getArticles = async (req, res, next) => {
   try {
+    const articles = await Article.find(
+        {title: {$regex: req.query.title, $options: 'i'}},
+        {},
+        {
+          limit: parseInt(req.query.limit) || 10,
+          page: parseInt(req.query.page) || 1,
+          populate: {path: 'owner', select: 'fullName email age'}
+        }
+    );
+    res.json(articles);
 
   } catch (err) {
     next(err);
