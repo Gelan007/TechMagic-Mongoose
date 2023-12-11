@@ -3,8 +3,12 @@ import User from "../models/user.model.js";
 
 export const getArticles = async (req, res, next) => {
   try {
+    const query = {};
+    if (req.query.title) {
+      query.title = {$regex: req.query.title, $options: 'i'};
+    }
     const articles = await Article.find(
-        {title: {$regex: req.query.title, $options: 'i'}},
+        query,
         {},
         {
           limit: parseInt(req.query.limit) || 10,
@@ -51,8 +55,7 @@ export const updateArticleById = async (req, res, next) => {
     const { owner, title, subtitle, description, category } = req.body;
     const article = await Article.findById(articleId);
     const user = await User.findById(owner);
-    console.log('a: ', articleId)
-    console.log('u: ', user._id)
+
     if (!article) {
       return res.status(404).json({ message: `Article with id ${articleId} not found` });
     }
@@ -78,7 +81,22 @@ export const updateArticleById = async (req, res, next) => {
 
 export const deleteArticleById = async (req, res, next) => {
   try {
+    const articleId = req.params.articleId;
+    const article = await Article.findById(articleId);
+    const user = await User.findById(article.owner);
 
+    if (!article) {
+      return res.status(404).json({ message: `Article with id ${articleId} not found` });
+    }
+    if (!user) {
+      return res.status(404).json({ message: `Owner not found` });
+    }
+
+    await article.deleteOne({_id: articleId});
+    user.numberOfArticles -= 1;
+    await user.save();
+
+    res.json({ message: `Article deleted successfully` });
   } catch (err) {
     next(err);
   }

@@ -14,6 +14,6 @@ articleRouter
   .get('/:id', getArticleById)
   .post('/', createArticle)
   .put('/:articleId', updateArticleById)
-  .delete('/:id', deleteArticleById);
+  .delete('/:articleId', deleteArticleById);
 
 export default articleRouter;
